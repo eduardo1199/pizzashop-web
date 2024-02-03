@@ -1,0 +1,7 @@
+{
+  "extends": ["@eduardo1199/eslint-config"],
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "simple-import-sort/imports": "error"
+  }
+}
