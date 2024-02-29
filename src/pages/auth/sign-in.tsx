@@ -1,10 +1,34 @@
 import { Helmet } from 'react-helmet-async'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+const signInForm = z.object({
+  email: z.string().email(),
+})
+
+type SignInForm = z.infer<typeof signInForm>
+
 export function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SignInForm>()
+
+  async function handleSignIn(data: SignInForm) {
+    toast.success('Enviamos um link de autenticação para seu e-mail.', {
+      action: {
+        label: 'Reenviar',
+        onClick: () => handleSignIn(data),
+      },
+    })
+  }
+
   return (
     <>
       <Helmet title="Login" />
@@ -19,13 +43,13 @@ export function SignIn() {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
             <div className="space-y-2">
               <Label htmlFor="email">Seu e-mail</Label>
-              <Input id="email" type="email" />
+              <Input id="email" type="email" {...register('email')} />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button disabled={isSubmitting} type="submit" className="w-full">
               Acessar painel
             </Button>
           </form>
